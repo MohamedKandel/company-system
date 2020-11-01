@@ -1,0 +1,57 @@
+create view employee_data
+as
+select EmpNO as 'Employee ID',
+       EmpName as 'Name',
+       Address,
+       Salary,
+       HiringDate as 'Hire Date',
+       Birthdate as 'Birthday Date',
+       employee.DeptNO as 'Department ID',
+       DeptName as 'Department'
+       from employee,department
+       where employee.DeptNO = department.DeptNO
+
+/*==================================================*/
+
+create view department_data
+as
+select department.DeptNO as 'Department ID',
+       DeptName as 'Department',
+       Location
+       from department
+
+/*==================================================*/
+
+create view project_data
+as
+select ProjectNO as 'Project ID',
+       ProjectName as 'Name',
+       project.Location,
+       project.DeptNO as 'Department ID',
+       DeptName as 'Department'
+       from Project,department
+       where project.DeptNO = department.DeptNO
+
+/*==================================================*/
+
+create view phones_data
+as
+select employee_phone.EmpNO as 'Employee_ID',
+       Phone,
+       EmpName as 'Name'
+       from employee,employee_phone
+       where employee_phone.EmpNO = employee.EmpNO
+
+/*==================================================*/
+
+create view working
+as
+select work_on.EmpNO as 'Employee ID',
+       work_on.ProjectNO as 'Project ID',
+       EmpName as 'Employee Name',
+       DeptName as 'Department',
+       ProjectName as 'Project Name'
+       from employee, work_on, department,Project
+       where work_on.EmpNO = employee.EmpNO and 
+       department.DeptNO = employee.DeptNO and
+       Project.ProjectNO = work_on.ProjectNO  
