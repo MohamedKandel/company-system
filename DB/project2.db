@@ -1,0 +1,102 @@
+create database project2;
+use project2;
+
+CREATE TABLE department(
+	DeptNO int PRIMARY KEY,
+    DeptName varchar(150) UNIQUE,
+    Location varchar(100)
+);
+
+create view department_data
+as
+select department.DeptNO as 'Department_ID',
+       DeptName as 'Department',
+       Location
+       from department;
+
+
+CREATE TABLE project(
+	ProjectNO int PRIMARY KEY,
+    ProjectName varchar(150) UNIQUE,
+    Location varchar(100),
+    DeptNO int,
+    FOREIGN KEY (DeptNo) REFERENCES department(DeptNO)
+);
+
+create view project_data
+as
+select ProjectNO as 'Project_ID',
+       ProjectName as 'Name',
+       project.Location,
+       project.DeptNO as 'Department_ID',
+       DeptName as 'Department'
+       from Project,department
+       where project.DeptNO = department.DeptNO;
+
+CREATE TABLE employee(
+	EmpNO int PRIMARY KEY,
+    EmpName varchar(120) UNIQUE,
+    Address varchar(200),
+    Salary double,
+    HiringDate date,
+    Birthdate date,
+    DeptNO int,
+    FOREIGN KEY (DeptNO) REFERENCES department(DeptNO)
+);
+
+create view employee_data
+as
+select EmpNO as 'Employee_ID',
+       EmpName as 'Name',
+       Address,
+       Salary,
+       HiringDate as 'Hire_Date',
+       Birthdate as 'Birthday_Date',
+       employee.DeptNO as 'Department_ID',
+       DeptName as 'Department'
+       from employee,department
+       where employee.DeptNO = department.DeptNO;  
+
+CREATE TABLE employee_phone(
+	EmpNO int,
+    Phone varchar(55),
+    PRIMARY KEY (EmpNO,Phone),
+    FOREIGN KEY (EmpNO) REFERENCES employee(EmpNO)
+);
+
+create view phones_data
+as
+select employee_phone.EmpNO as 'Employee_ID',
+       Phone,
+       EmpName as 'Name'
+       from employee,employee_phone
+       where employee_phone.EmpNO = employee.EmpNO;
+
+CREATE TABLE work_on(
+	EmpNO int,
+    ProjectNO int,
+    PRIMARY KEY (EmpNO,ProjectNO),
+    FOREIGN KEY (EmpNO) REFERENCES employee(EmpNO),
+    FOREIGN KEY (ProjectNO) REFERENCES project(ProjectNO)
+);
+
+create view working
+as
+select work_on.EmpNO as 'Employee_ID',
+       work_on.ProjectNO as 'Project_ID',
+       EmpName as 'Employee_Name',
+       DeptName as 'Department',
+       ProjectName as 'Project_Name'
+       from employee, work_on, department,Project
+       where work_on.EmpNO = employee.EmpNO and 
+       department.DeptNO = employee.DeptNO and
+       Project.ProjectNO = work_on.ProjectNO;
+
+CREATE table users (
+	username varchar(40) PRIMARY KEY,
+    PASSWORD varchar(40) NOT null
+);
+
+INSERT into users VALUES ('a','a');
+INSERT into users VALUES ('b','b');
+INSERT into users VALUES ('admin','123');
